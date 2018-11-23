@@ -1,0 +1,7 @@
+@import '~@angular/material/theming';
+
+$app-nature-primary: mat-palette($mat-brown, 700, 300, 900);
+$app-nature-accent: mat-palette($mat-deep-purple, 300);
+$app-nature-warn: mat-palette($mat-red, 600);
+
+$app-nature-theme: mat-light-theme($app-nature-primary, $app-nature-accent, $app-nature-warn);
