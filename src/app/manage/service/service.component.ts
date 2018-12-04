@@ -184,16 +184,7 @@ export class ServiceComponent implements OnInit {
 
   editGroup(group: Group) {
     cancelBubble();
-    const dialogRef = this.dialog.open(AddGroupComponent, {
-      minWidth: '300px',
-      data: { stream_type: 'srtp' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.store.dispatch(new ActionAddGroupRetrieve({ ...result }));
-      }
-    });
+    this.notificationsService.info('开发中...');
   }
 
   addUser(group: Group) {
@@ -214,7 +205,9 @@ export class ServiceComponent implements OnInit {
     this.store.dispatch(new ActionDeleteUserRetrieve({ client_index: user.user_number }));
   }
 
-  editUser(user: User) {}
+  editUser(user: User) {
+    this.notificationsService.info('开发中...');
+  }
 
   private _getLevel = (node: GroupFlatNode) => node.level;
 
