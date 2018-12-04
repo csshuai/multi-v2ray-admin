@@ -10,7 +10,7 @@ mat-sidenav-container {
   width: 100%;
 
   .toolbar {
-    position: fixed;
+    position: inherit;
     width: 100%;
     display: flex;
     z-index: 10;

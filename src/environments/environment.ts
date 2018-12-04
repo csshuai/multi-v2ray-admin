@@ -8,6 +8,7 @@ const packageJson = require('../../package.json');
 export const environment = {
   appName: 'Multi V2ray Admin',
   envName: 'DEV',
+  host: '/api',
   production: false,
   test: false,
   i18nPrefix: '',

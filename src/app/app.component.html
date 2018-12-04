@@ -2,11 +2,12 @@
 
   <mat-sidenav-container>
 
-    <mat-sidenav #sidenav mode="push">
+    <mat-sidenav #sidenav [mode]="isLargeWidth() ? 'side' : 'push'" [opened]="false && isLargeWidth()">
       <div class="branding"><img [src]="logo"/>
         <span data-testid="title">{{ 'title.short' | translate}}</span></div>
       <mat-nav-list>
-        <a mat-list-item *ngFor="let item of navigationSideMenu" (click)="sidenav.close()" [routerLink]="[item.link]"
+        <a mat-list-item *ngFor="let item of navigation" (click)="!isLargeWidth() ? sidenav.close() : {}"
+           [routerLink]="[item.link]"
            routerLinkActive="active">
           {{item.label | translate}}
         </a>
@@ -18,33 +19,25 @@
 
     <div class="wrapper">
 
-      <div class="toolbar" [style.position]="(stickyHeader$ | async) ? 'fixed' : 'inherit'"
-           [class.mat-elevation-z4]="(stickyHeader$ | async)">
+      <div class="toolbar" [class.mat-elevation-z4]="(stickyHeader$ | async)">
         <mat-toolbar color="primary">
-          <button mat-icon-button class="d-md-none" (click)="sidenav.open()">
+          <button mat-icon-button class="d-none" (click)="sidenav.toggle()">
             <fa-icon icon="bars"></fa-icon>
-
           </button>
 
           <span routerLink="" class="branding spacer center d-inline d-sm-none">
-            <img [src]="logo"/></span>
-          <span routerLink="" class="branding spacer center d-none d-sm-inline d-md-none"><img [src]="logo"/> {{
-            'title.short' | translate }}</span>
-          <span routerLink="" class="branding spacer d-none d-md-inline"><img [src]="logo"/> {{ 'title.long' | translate
-            }}</span>
-
-          <span class="d-none d-md-inline">
-            <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
-                    routerLinkActive="active">
-              {{item.label | translate}}
-            </button>
+            <img [src]="logo"/>
           </span>
+          <span routerLink="" class="branding spacer center d-none d-sm-inline d-md-none"><img [src]="logo"/>
+            {{ 'title.short' | translate }}
+          </span>
+          <span routerLink="" class="branding spacer d-none d-md-inline"><img [src]="logo"/> {{ 'title.long' | translate }}</span>
 
-          <button mat-button mat-stroked-button color="accent" *ngIf="!(isAuthenticated$ | async)" (click)="onLoginClick()">
+          <button class="d-none" mat-button mat-stroked-button color="accent" *ngIf="!(isAuthenticated$ | async)" (click)="onLoginClick()">
             {{ 'menu.login' | translate }}
           </button>
 
-          <button *ngIf="(isAuthenticated$ | async)"
+          <button class="d-none" *ngIf="(isAuthenticated$ | async)"
                   mat-icon-button
                   [matMenuTriggerFor]="toolbarUserMenu">
             <fa-icon icon="user-circle"></fa-icon>
@@ -85,7 +78,7 @@
       </div>
 
       <div class="footer">
-        <div class="row">
+        <div class="row d-none">
           <div class="col-sm-12 links">
             <a href="https://www.github.com/tomastrajan" target="_blank">
               <fa-icon [icon]="['fab','github']"></fa-icon>

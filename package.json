@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open",
+    "start": "ng serve --proxy-config proxy.conf.json --port 4201",
     "docker-start": "ng serve  --host 0.0.0.0",
     "build": "ng build",
     "test": "npm run lint && ng test --configuration=test",

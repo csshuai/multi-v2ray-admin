@@ -4,6 +4,7 @@
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $foreground: map-get($theme, foreground);
+  $warn: map-get($theme, warn);
 
   a {
     color: mat-color($foreground, text);
@@ -16,5 +17,13 @@
   code {
     color: mat-color($accent, lighter-contrast);
     background-color: mat-color($accent, lighter);
+  }
+
+  .state-layout {
+    .error-state {
+      > fa-icon {
+        color: mat-color($warn);
+      }
+    }
   }
 }

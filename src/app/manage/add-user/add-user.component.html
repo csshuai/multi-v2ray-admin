@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>新建用户</h1>
+<div mat-dialog-content>
+  <div class="row">
+    <mat-form-field class="col">
+      <input placeholder="Email" [(ngModel)]="data.email" [formControl]="emailFormControl" matInput type="email" cdkFocusInitial>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">取消</button>
+  <button mat-button [mat-dialog-close]="data">确定</button>
+</div>

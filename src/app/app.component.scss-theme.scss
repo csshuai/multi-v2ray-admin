@@ -1,4 +1,5 @@
 @import '~@angular/material/theming';
+@import '../styles-variables';
 
 @mixin app-component-theme($theme) {
   $primary: map-get($theme, primary);
@@ -40,6 +41,7 @@
       .signature {
         a {
           color: mat-color($primary, lighter);
+
           &:hover {
             color: mat-color($accent);
           }

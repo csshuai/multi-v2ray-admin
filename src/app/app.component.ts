@@ -34,19 +34,20 @@ export class AppComponent implements OnInit {
   year = new Date().getFullYear();
   logo = require('../assets/logo.svg');
   languages = ['en', 'zh'];
-  navigation = [
-    { link: 'about', label: 'menu.about' },
-    { link: 'features', label: 'menu.features' },
-    { link: 'examples', label: 'menu.examples' }
-  ];
-  navigationSideMenu = [...this.navigation, { link: 'settings', label: 'menu.settings' }];
+  navigation = [{ link: 'manage', label: 'menu.manage' }];
 
   isAuthenticated$: Observable<boolean>;
   stickyHeader$: Observable<boolean>;
   language$: Observable<string>;
   theme$: Observable<string>;
 
-  constructor(private store: Store<AppState>, private storageService: LocalStorageService) {}
+  constructor(private store: Store<AppState>, private storageService: LocalStorageService) {
+    window.onresize = () => {
+      // https://blog.khophi.co/angular-material-2-responsive-sidebar-menu-navigation/
+      // https://medium.com/@lopesgon/angular-material-a-responsive-sidenav-ef1d06b37986
+      // set screenWidth on screen size change
+    };
+  }
 
   private static isIEorEdgeOrSafari() {
     return ['ie', 'edge', 'safari'].includes(browser().name);
@@ -78,5 +79,13 @@ export class AppComponent implements OnInit {
 
   onLanguageSelect({ value: language }) {
     this.store.dispatch(new ActionSettingsChangeLanguage({ language }));
+  }
+
+  isMediumWidth() {
+    return window.innerWidth >= 768;
+  }
+
+  isLargeWidth() {
+    return window.innerWidth >= 992;
   }
 }

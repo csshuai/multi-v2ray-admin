@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreModule } from '@app/core';
+import { ManageModule } from '@app/manage';
 import { SettingsModule } from '@app/settings';
 import { SharedModule } from '@app/shared';
 import { StaticModule } from '@app/static';
@@ -23,6 +24,7 @@ import { AppComponent } from './app.component';
     // features
     SettingsModule,
     StaticModule,
+    ManageModule,
 
     // app
     AppRoutingModule

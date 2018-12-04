@@ -6,7 +6,7 @@ import { SettingsComponent } from '@app/settings/settings/settings.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'about',
+    redirectTo: 'manage',
     pathMatch: 'full'
   },
   {
@@ -15,14 +15,14 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'about'
+    redirectTo: 'manage'
   }
 ];
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      useHash: true,
+      useHash: false,
       scrollPositionRestoration: 'enabled'
     })
   ],

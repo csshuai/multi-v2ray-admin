@@ -1,0 +1,83 @@
+<div class="container">
+  <div class="actions">
+    <a mat-raised-button class="actions-main" (click)="manage('start')" [ngClass]="routeAnimationsElements">
+      启动服务
+    </a>
+    <a mat-raised-button class="actions-main" (click)="manage('restart')" [ngClass]="routeAnimationsElements">
+      重启服务
+    </a>
+    <a mat-raised-button class="actions-main" (click)="manage('stop')" [ngClass]="routeAnimationsElements">
+      停止服务
+    </a>
+  </div>
+
+  <ng-container *ngIf="getGroups$ | async as groupsState">
+    <div class="state-layout">
+      <mat-spinner class="progress-state" *ngIf="groupsState.loading"></mat-spinner>
+      <p class="error-state" *ngIf="groupsState.error" (click)="getGroups()">
+        <fa-icon icon="exclamation-triangle" size="3x"></fa-icon>
+        <br><br>
+        <span>{{ 'manage.network.error.retry' | translate }}</span>
+      </p>
+      <div *ngIf="groupsState.groups as groups">
+        <div class="row">
+          <mat-form-field class="col">
+            <input matInput placeholder="IP地址" disabled [value]="groups.group_list[0]?.ip">
+          </mat-form-field>
+          <mat-form-field class="col">
+            <input matInput placeholder="PATH" disabled [value]="groups.path">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col">
+            <input matInput placeholder="用户数量" disabled [value]="groups.user_number">
+          </mat-form-field>
+          <mat-form-field class="col">
+            <mat-label>禁止BT</mat-label>
+            <mat-select [value]="groups.ban_bt" (selectionChange)="changeSettings('ban_bittorrent', $event.value)">
+              <mat-option [value]="true">是</mat-option>
+              <mat-option [value]="false">否</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <br>
+        <mat-card>
+          <span class="d-flex justify-content-between align-items-baseline">
+            <h2>组</h2>
+            <a mat-icon-button [matTooltip]="'添加组'" matTooltipPosition="left" (click)="addGroup()">
+              <fa-icon [icon]="'plus'"></fa-icon>
+            </a>
+          </span>
+          <mat-tree [dataSource]="groupsDataSource" [treeControl]="groupsTreeControl">
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+              <span matTreeNodeToggle class="item-name">{{node.name}}</span>
+              <a mat-icon-button [matTooltip]="'编辑用户'" matTooltipPosition="left" (click)="editUser(node.type)">
+                <fa-icon [icon]="'edit'"></fa-icon>
+              </a>
+              <a mat-icon-button [matTooltip]="'删除用户'" matTooltipPosition="left" (click)="deleteUser(node.type)">
+                <fa-icon [icon]="'trash'"></fa-icon>
+              </a>
+              <a disabled mat-icon-button></a>
+            </mat-tree-node>
+            <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodeToggle matTreeNodePadding>
+              <span class="item-name group">{{node.name}}</span>
+              <a mat-icon-button [matTooltip]="'添加用户'" matTooltipPosition="left" (click)="addUser(node.type)">
+                <fa-icon [icon]="'plus'"></fa-icon>
+              </a>
+              <a mat-icon-button [matTooltip]="'编辑'" matTooltipPosition="left" (click)="editGroup(node.type)">
+                <fa-icon [icon]="'edit'"></fa-icon>
+              </a>
+              <a mat-icon-button [matTooltip]="'删除'" matTooltipPosition="left" (click)="deleteGroup(node.type)">
+                <fa-icon [icon]="'trash'"></fa-icon>
+              </a>
+              <a matTreeNodeToggle mat-icon-button [attr.aria-label]="'toggle ' + node.name">
+                <fa-icon [icon]="groupsTreeControl.isExpanded(node) ? 'chevron-down' : 'chevron-right'"></fa-icon>
+              </a>
+            </mat-tree-node>
+          </mat-tree>
+        </mat-card>
+      </div>
+    </div>
+  </ng-container>
+
+</div>

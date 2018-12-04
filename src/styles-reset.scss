@@ -18,3 +18,27 @@ code {
     left: 4px;
   }
 }
+
+.state-layout {
+  .progress-state {
+    margin: auto;
+  }
+
+  .error-state {
+    text-align: center;
+    padding: 20px;
+
+    > mat-icon {
+      width: 54px;
+      font-size: 48px;
+    }
+
+    > span {
+      opacity: 0.4;
+    }
+
+    .symbol {
+      font-weight: bold;
+    }
+  }
+}

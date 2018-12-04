@@ -1,0 +1,12 @@
+{
+  "doc": "https://webpack.js.org/configuration/dev-server/#devserver-proxy",
+  "doc": "https://me.chjiyun.com/2017/11/06/Angular4-x项目如何实现跨域/",
+  "/api": {
+    "target": "http://localhost:5000",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}

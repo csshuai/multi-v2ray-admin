@@ -1,12 +1,14 @@
 {
+  "title.long": "Multi V2ray Admin",
+  "title.short": "Multi V2ray",
+  "header.github": "Project Github Repository",
+
   "menu.about": "About",
   "menu.examples": "Examples",
   "menu.features": "Features",
   "menu.login": "Sign in",
   "menu.logout": "Logout",
   "menu.settings": "Settings",
-
-  "header.github": "Project Github Repository",
 
   "settings.animations.elements": "Navigation page elements slide up",
   "settings.animations.page": "Navigation whole page transition",
@@ -29,7 +31,5 @@
   "settings.themes.saneago": "",
   "settings.themes.sticky-header": "Sticky header",
   "settings.themes.title": "Themes",
-  "settings.title": "Settings",
-  "title.long": "Multi V2ray Admin",
-  "title.short": "Multi V2ray"
+  "settings.title": "Settings"
 }

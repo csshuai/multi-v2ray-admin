@@ -31,3 +31,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Thanks
 
 - [Angular, NgRx and Angular Material Starter](https://github.com/tomastrajan/angular-ngrx-material-starter)
+- [CodeSandbox](https://codesandbox.io/)
+- http://www.runoob.com/w3cnote/flex-grammar.html

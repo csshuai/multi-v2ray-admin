@@ -1,0 +1,61 @@
+@import '../../../styles-variables';
+
+.container {
+  position: relative;
+
+  .actions {
+    text-align: center;
+    margin: 50px;
+    z-index: 1;
+
+    span {
+      display: inline-block;
+      font-weight: bold;
+      padding: 20px 10px 30px 10px;
+    }
+
+    a {
+      margin: 0 20px 20px 0;
+
+      &.actions-main {
+        text-transform: uppercase;
+        padding: 12px 24px;
+      }
+
+      fa-icon {
+        position: relative;
+        bottom: 1px;
+      }
+    }
+  }
+}
+
+.state-layout {
+  margin: 0 0 3rem 0;
+
+  mat-tree {
+    .item-name {
+      flex: 1 1 auto;
+
+      &.group {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, sm)) {
+  .container {
+    .actions {
+      margin: 40px 0 0 0;
+
+      span {
+        padding: 10px 0 20px 0;
+      }
+
+      a {
+        width: 100%;
+      }
+    }
+  }
+}
