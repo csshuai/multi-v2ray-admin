@@ -83,7 +83,7 @@
                   "name": "main",
                   "baseline": "100kb",
                   "maximumWarning": "50kb",
-                  "maximumError": "100kb"
+                  "maximumError": "150kb"
                 }
               ]
             }
