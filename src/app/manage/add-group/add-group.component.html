@@ -1,27 +1,82 @@
-<h1 mat-dialog-title>新建组</h1>
-<div mat-dialog-content>
+<h1 mat-dialog-title>{{ data ? '修改组' : '新建组' }}</h1>
+<div mat-dialog-content [formGroup]="form">
   <div class="row">
     <mat-form-field class="col">
-      <input placeholder="Port" [(ngModel)]="data.port" [formControl]="portFormControl" matInput type="number" cdkFocusInitial>
+      <input placeholder="Port" formControlName="port" matInput type="number" cdkFocusInitial>
     </mat-form-field>
   </div>
   <div class="row">
     <mat-form-field class="col">
       <mat-label>Stream Type</mat-label>
-      <mat-select [(ngModel)]="data.stream_type">
-        <mat-option value="wireguard">wireguard</mat-option>
-        <mat-option value="dtls">dtls</mat-option>
-        <mat-option value="wechat">wechat</mat-option>
-        <mat-option value="utp">utp</mat-option>
-        <mat-option value="srtp">srtp</mat-option>
-        <mat-option value="mtproto">mtproto</mat-option>
-        <mat-option value="socks">socks</mat-option>
-        <mat-option value="ss">ss</mat-option>
+      <mat-select formControlName="stream_type" (selectionChange)="onStreamTypeSelect($event)">
+        <mat-option *ngFor="let type of streamTypes" [value]="type">{{ type }}</mat-option>
       </mat-select>
     </mat-form-field>
+  </div>
+  <div *ngIf="form.get('stream_type').value == 'tcp_host' || form.get('stream_type').value == 'ws'">
+    <div class="row" formGroupName="data">
+      <mat-form-field class="col">
+        <input placeholder="HOST" formControlName="host" matInput cdkFocusInitial>
+      </mat-form-field>
+    </div>
+  </div>
+  <div *ngIf="form.get('stream_type').value == 'quic'">
+    <div class="row" formGroupName="data">
+      <mat-form-field class="col">
+        <mat-label>加密</mat-label>
+        <mat-select formControlName="security">
+          <mat-option value="none">none</mat-option>
+          <mat-option value="aes-128-gcm">aes-128-gcm</mat-option>
+          <mat-option value="chacha20-poly1305">chacha20-poly1305</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col">
+        <input placeholder="密码" formControlName="key" matInput cdkFocusInitial>
+      </mat-form-field>
+      <mat-form-field class="col">
+        <mat-label>伪装头</mat-label>
+        <mat-select formControlName="header">
+          <mat-option value="none">none</mat-option>
+          <mat-option value="srtp">srtp</mat-option>
+          <mat-option value="utp">utp</mat-option>
+          <mat-option value="wechat-video">wechat-video</mat-option>
+          <mat-option value="dtls">dtls</mat-option>
+          <mat-option value="wireguard">wireguard</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div *ngIf="form.get('stream_type').value == 'socks'">
+    <div class="row" formGroupName="data">
+      <mat-form-field class="col">
+        <input placeholder="用户名" formControlName="user" matInput cdkFocusInitial>
+      </mat-form-field>
+      <mat-form-field class="col">
+        <input placeholder="密码" formControlName="pass" matInput cdkFocusInitial>
+      </mat-form-field>
+    </div>
+  </div>
+  <div *ngIf="form.get('stream_type').value == 'ss'">
+    <div class="row" formGroupName="data">
+      <mat-form-field class="col">
+        <mat-label>Method</mat-label>
+        <mat-select formControlName="method">
+          <mat-option value="aes-256-cfb">aes-256-cfb</mat-option>
+          <mat-option value="aes-128-cfb">aes-128-cfb</mat-option>
+          <mat-option value="chacha20">chacha20</mat-option>
+          <mat-option value="chacha20-ietf">chacha20-ietf</mat-option>
+          <mat-option value="aes-256-gcm">aes-256-gcm</mat-option>
+          <mat-option value="aes-128-gcm">aes-128-gcm</mat-option>
+          <mat-option value="chacha20-poly1305">chacha20-poly1305</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col">
+        <input placeholder="密码" formControlName="password" matInput cdkFocusInitial>
+      </mat-form-field>
+    </div>
   </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">取消</button>
-  <button mat-button [mat-dialog-close]="data">确定</button>
+  <button mat-button [mat-dialog-close]="form.value" [disabled]="!form.valid">确定</button>
 </div>

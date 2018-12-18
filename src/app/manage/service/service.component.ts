@@ -13,13 +13,26 @@ import {
   ActionAddUserRetrieve,
   ActionDeleteGroupRetrieve,
   ActionDeleteUserRetrieve,
+  ActionEditGroupRetrieve,
+  ActionEditUserRetrieve,
   ActionGetGroupsRetrieve,
   ActionManageRetrieve,
   ActionSettingsRetrieve,
   RetrieveType
 } from '../manage.actions';
 import { GetGroupsState, Group, Groups, User } from '../manage.model';
-import { addGroup, addUser, deleteGroup, deleteUser, getGroups, manage, settings, State } from '../manage.state';
+import {
+  addGroup,
+  addUser,
+  deleteGroup,
+  deleteUser,
+  editStream,
+  editUser,
+  getGroups,
+  manage,
+  settings,
+  State
+} from '../manage.state';
 
 class GroupFlatNode {
   constructor(public expandable: boolean, public name: string, public level: number, public type: any) {}
@@ -62,18 +75,10 @@ export class ServiceComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
-  transformer = (node: Group | User, level: number) => {
-    if (isGroup(node)) {
-      return new GroupFlatNode(!!node.node_list, `${node.tag} (${node.port})`, level, node);
-    } else {
-      return new GroupFlatNode(false, `${node.user_number}: ${node.user_info}`, level, node);
-    }
-  };
-
   ngOnInit() {
     this.groupsTreeControl = new FlatTreeControl<GroupFlatNode>(this._getLevel, this._isExpandable);
     this.groupsTreeFlattener = new MatTreeFlattener(
-      this.transformer,
+      this._transformer,
       this._getLevel,
       this._isExpandable,
       this._getChildren
@@ -118,6 +123,16 @@ export class ServiceComponent implements OnInit {
         }
       }
     });
+    this.store.pipe(select(editStream)).subscribe(value => {
+      if (value.result) {
+        if (value.result.success) {
+          this.notificationsService.success(value.result.msg);
+          this.getGroups();
+        } else {
+          this.notificationsService.error(value.result.msg);
+        }
+      }
+    });
     this.store.pipe(select(deleteGroup)).subscribe(value => {
       if (value.result) {
         if (value.result.success) {
@@ -129,6 +144,16 @@ export class ServiceComponent implements OnInit {
       }
     });
     this.store.pipe(select(addUser)).subscribe(value => {
+      if (value.result) {
+        if (value.result.success) {
+          this.notificationsService.success(value.result.msg);
+          this.getGroups();
+        } else {
+          this.notificationsService.error(value.result.msg);
+        }
+      }
+    });
+    this.store.pipe(select(editUser)).subscribe(value => {
       if (value.result) {
         if (value.result.success) {
           this.notificationsService.success(value.result.msg);
@@ -166,8 +191,7 @@ export class ServiceComponent implements OnInit {
 
   addGroup() {
     const dialogRef = this.dialog.open(AddGroupComponent, {
-      minWidth: '300px',
-      data: { stream_type: 'srtp' }
+      minWidth: '300px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -177,21 +201,36 @@ export class ServiceComponent implements OnInit {
     });
   }
 
+  editGroup(group: Group) {
+    cancelBubble();
+    const dialogRef = this.dialog.open(AddGroupComponent, {
+      minWidth: '300px',
+      data: group
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.store.dispatch(
+          new ActionEditGroupRetrieve({
+            groupTag: group.tag,
+            streamBody: { stream_type: result.stream_type, data: result.data },
+            groupBody: { modify_type: 'port', value: result.port }
+          })
+        );
+      }
+    });
+  }
+
   deleteGroup(group: Group) {
     cancelBubble();
     this.store.dispatch(new ActionDeleteGroupRetrieve({ tag: group.tag }));
-  }
-
-  editGroup(group: Group) {
-    cancelBubble();
-    this.notificationsService.info('开发中...');
   }
 
   addUser(group: Group) {
     cancelBubble();
     const dialogRef = this.dialog.open(AddUserComponent, {
       minWidth: '300px',
-      data: { group_tag: group.tag }
+      data: { group_tag: group.tag, protocol: group.protocol }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -201,13 +240,48 @@ export class ServiceComponent implements OnInit {
     });
   }
 
+  editUser(user: User) {
+    const group = this._findGroup(user);
+    const dialogRef = this.dialog.open(AddUserComponent, {
+      minWidth: '300px',
+      data: { group_tag: group.tag, protocol: group.protocol, user: user }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.store.dispatch(
+          new ActionEditUserRetrieve({
+            clientIndex: user.user_number,
+            email: result.data.email,
+            uuid: result.data.uuid,
+            aid: result.data.aid
+          })
+        );
+      }
+    });
+  }
+
   deleteUser(user: User) {
     this.store.dispatch(new ActionDeleteUserRetrieve({ client_index: user.user_number }));
   }
 
-  editUser(user: User) {
-    this.notificationsService.info('开发中...');
+  private _findGroup(user: User) {
+    for (const group of this.groups.group_list) {
+      for (const temp of group.node_list) {
+        if (temp === user) {
+          return group;
+        }
+      }
+    }
   }
+
+  private _transformer = (node: Group | User, level: number) => {
+    if (isGroup(node)) {
+      return new GroupFlatNode(!!node.node_list, `${node.tag} (${node.port})`, level, node);
+    } else {
+      return new GroupFlatNode(false, `${node.user_number}: ${node.user_info}`, level, node);
+    }
+  };
 
   private _getLevel = (node: GroupFlatNode) => node.level;
 

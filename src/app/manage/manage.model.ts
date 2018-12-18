@@ -43,11 +43,19 @@ export interface Group {
 export interface User {
   user_number: number;
   _User__password: string;
+  method: string;
   user_info: string;
   alter_id: number;
   network: string;
   path: string;
+  quic: Quic;
   host: string;
+  header: string;
+}
+
+export interface Quic {
+  security: string;
+  key: string;
   header: string;
 }
 

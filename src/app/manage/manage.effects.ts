@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '@app/core';
+import { Result } from '@app/manage/manage.model';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { asyncScheduler, of } from 'rxjs';
+import { asyncScheduler, of, zip } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { ObservableInput } from 'rxjs/src/internal/types';
 
 import {
   ActionAddGroupRetrieve,
@@ -15,6 +17,10 @@ import {
   ActionDeleteGroupRetrieveSuccess,
   ActionDeleteUserRetrieve,
   ActionDeleteUserRetrieveSuccess,
+  ActionEditGroupRetrieve,
+  ActionEditGroupRetrieveSuccess,
+  ActionEditUserRetrieve,
+  ActionEditUserRetrieveSuccess,
   ActionGetGroupsRetrieve,
   ActionGetGroupsRetrieveError,
   ActionGetGroupsRetrieveSuccess,
@@ -26,6 +32,8 @@ import {
   AddUserActionTypes,
   DeleteGroupActionTypes,
   DeleteUserActionTypes,
+  EditGroupActionTypes,
+  EditUserActionTypes,
   GetGroupsActionTypes,
   ManageActionTypes,
   SettingsActionTypes
@@ -105,6 +113,31 @@ export class ManageEffects {
     );
 
   @Effect()
+  editGroup = ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
+    this.actions$.pipe(
+      ofType<ActionEditGroupRetrieve>(EditGroupActionTypes.RETRIEVE),
+      debounceTime(debounce, scheduler),
+      switchMap(action => {
+        const tag = action.payload.groupTag;
+        const streamBody = action.payload.streamBody;
+        const groupBody = action.payload.groupBody;
+        return zip(this.service.editStream(tag, streamBody), this.service.editGroup(tag, groupBody)).pipe(
+          map(results => {
+            let result: Result<any> = results[0];
+            for (const temp of results) {
+              if (!temp.success) {
+                result = temp;
+                break;
+              }
+            }
+            return new ActionEditGroupRetrieveSuccess({ result });
+          }),
+          catchError(() => of({ type: 'ignore error' }))
+        );
+      })
+    );
+
+  @Effect()
   deleteGroup = ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
     this.actions$.pipe(
       ofType<ActionDeleteGroupRetrieve>(DeleteGroupActionTypes.RETRIEVE),
@@ -131,6 +164,42 @@ export class ManageEffects {
           catchError(error => of(new ActionAddUserRetrieveError({ error })))
         )
       )
+    );
+
+  @Effect()
+  editUser = ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
+    this.actions$.pipe(
+      ofType<ActionEditUserRetrieve>(EditUserActionTypes.RETRIEVE),
+      debounceTime(debounce, scheduler),
+      switchMap(action => {
+        const array: ObservableInput<any>[] = [];
+        const clientIndex = action.payload.clientIndex;
+        if (action.payload.email) {
+          const body = { modify_type: 'email', value: action.payload.email };
+          array.push(this.service.editUser(clientIndex, body));
+        }
+        if (action.payload.uuid) {
+          const body = { modify_type: 'uuid', value: action.payload.uuid };
+          array.push(this.service.editUser(clientIndex, body));
+        }
+        if (action.payload.aid) {
+          const body = { modify_type: 'aid', value: action.payload.aid };
+          array.push(this.service.editUser(clientIndex, body));
+        }
+        return zip(...array).pipe(
+          map(results => {
+            let result: Result<any> = results[0];
+            for (const temp of results) {
+              if (!temp.success) {
+                result = temp;
+                break;
+              }
+            }
+            return new ActionEditUserRetrieveSuccess({ result });
+          }),
+          catchError(() => of({ type: 'ignore error' }))
+        );
+      })
     );
 
   @Effect()

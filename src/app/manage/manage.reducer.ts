@@ -7,6 +7,10 @@ import {
   DeleteGroupActionTypes,
   DeleteUserActions,
   DeleteUserActionTypes,
+  EditGroupActions,
+  EditGroupActionTypes,
+  EditUserActions,
+  EditUserActionTypes,
   GetGroupsActions,
   GetGroupsActionTypes,
   ManageActions,
@@ -107,6 +111,27 @@ export function addGroupReducer(state: ResultState<any> = { loading: false }, ac
   }
 }
 
+export function editGroupReducer(state: ResultState<any> = { loading: false }, action: EditGroupActions) {
+  switch (action.type) {
+    case EditGroupActionTypes.RETRIEVE:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        result: null
+      };
+    case EditGroupActionTypes.RETRIEVE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        result: action.payload.result
+      };
+    default:
+      return state;
+  }
+}
+
 export function deleteGroupReducer(state: ResultState<any> = { loading: false }, action: DeleteGroupActions) {
   switch (action.type) {
     case DeleteGroupActionTypes.RETRIEVE:
@@ -138,6 +163,27 @@ export function addUserReducer(state: ResultState<any> = { loading: false }, act
         result: null
       };
     case AddUserActionTypes.RETRIEVE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        result: action.payload.result
+      };
+    default:
+      return state;
+  }
+}
+
+export function editUserReducer(state: ResultState<any> = { loading: false }, action: EditUserActions) {
+  switch (action.type) {
+    case EditUserActionTypes.RETRIEVE:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        result: null
+      };
+    case EditUserActionTypes.RETRIEVE_SUCCESS:
       return {
         ...state,
         loading: false,

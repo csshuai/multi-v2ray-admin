@@ -7,6 +7,8 @@ import {
   addUserReducer,
   deleteGroupReducer,
   deleteUserReducer,
+  editGroupReducer,
+  editUserReducer,
   getGroupsReducer,
   manageReducer,
   settingsReducer
@@ -17,8 +19,10 @@ export interface ManageState {
   settings: ResultState<any>;
   getGroups: GetGroupsState;
   addGroup: ResultState<any>;
+  editStream: ResultState<any>;
   deleteGroup: ResultState<any>;
   addUser: ResultState<any>;
+  editUser: ResultState<any>;
   deleteUser: ResultState<any>;
 }
 
@@ -33,8 +37,10 @@ export const reducers: ActionReducerMap<ManageState> = {
   settings: settingsReducer,
   getGroups: getGroupsReducer,
   addGroup: addGroupReducer,
+  editStream: editGroupReducer,
   deleteGroup: deleteGroupReducer,
   addUser: addUserReducer,
+  editUser: editUserReducer,
   deleteUser: deleteUserReducer
 };
 
@@ -58,6 +64,11 @@ export const addGroup = createSelector(
   (state: ManageState) => state.addGroup
 );
 
+export const editStream = createSelector(
+  selectManage,
+  (state: ManageState) => state.editStream
+);
+
 export const deleteGroup = createSelector(
   selectManage,
   (state: ManageState) => state.deleteGroup
@@ -66,6 +77,11 @@ export const deleteGroup = createSelector(
 export const addUser = createSelector(
   selectManage,
   (state: ManageState) => state.addUser
+);
+
+export const editUser = createSelector(
+  selectManage,
+  (state: ManageState) => state.editUser
 );
 
 export const deleteUser = createSelector(

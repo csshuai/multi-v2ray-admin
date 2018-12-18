@@ -61,7 +61,9 @@
             </mat-tree-node>
             <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodeToggle matTreeNodePadding>
               <span class="item-name group">{{node.name}}</span>
-              <a mat-icon-button [matTooltip]="'添加用户'" matTooltipPosition="left" (click)="addUser(node.type)">
+              <a *ngIf="node.type.protocol === 'Vmess' || node.type.protocol === 'Socks'" mat-icon-button [matTooltip]="'添加用户'"
+                 matTooltipPosition="left"
+                 (click)="addUser(node.type)">
                 <fa-icon [icon]="'plus'"></fa-icon>
               </a>
               <a mat-icon-button [matTooltip]="'编辑'" matTooltipPosition="left" (click)="editGroup(node.type)">

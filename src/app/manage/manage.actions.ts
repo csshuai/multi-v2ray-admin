@@ -73,7 +73,6 @@ export class ActionGetGroupsRetrieveError implements Action {
 export type GetGroupsActions = ActionGetGroupsRetrieve | ActionGetGroupsRetrieveSuccess | ActionGetGroupsRetrieveError;
 
 // AddGroup
-
 export enum AddGroupActionTypes {
   RETRIEVE = '[AddGroup] Retrieve',
   RETRIEVE_SUCCESS = '[AddGroup] Retrieve Success'
@@ -92,6 +91,32 @@ export class ActionAddGroupRetrieveSuccess implements Action {
 }
 
 export type AddGroupActions = ActionAddGroupRetrieve | ActionAddGroupRetrieveSuccess;
+
+// EditGroup
+export enum EditGroupActionTypes {
+  RETRIEVE = '[EditGroup] Retrieve',
+  RETRIEVE_SUCCESS = '[EditGroup] Retrieve Success'
+}
+
+export class ActionEditGroupRetrieve implements Action {
+  readonly type = EditGroupActionTypes.RETRIEVE;
+
+  constructor(
+    readonly payload: {
+      groupTag: string;
+      streamBody: { stream_type: string; data: {} };
+      groupBody: { modify_type: string; value: {} };
+    }
+  ) {}
+}
+
+export class ActionEditGroupRetrieveSuccess implements Action {
+  readonly type = EditGroupActionTypes.RETRIEVE_SUCCESS;
+
+  constructor(readonly payload: { result: Result<any> }) {}
+}
+
+export type EditGroupActions = ActionEditGroupRetrieve | ActionEditGroupRetrieveSuccess;
 
 // DeleteGroup
 export enum DeleteGroupActionTypes {
@@ -139,6 +164,33 @@ export class ActionAddUserRetrieveError implements Action {
 }
 
 export type AddUserActions = ActionAddUserRetrieve | ActionAddUserRetrieveSuccess | ActionAddUserRetrieveError;
+
+// EditUser
+export enum EditUserActionTypes {
+  RETRIEVE = '[EditUser] Retrieve',
+  RETRIEVE_SUCCESS = '[EditUser] Retrieve Success'
+}
+
+export class ActionEditUserRetrieve implements Action {
+  readonly type = EditUserActionTypes.RETRIEVE;
+
+  constructor(
+    readonly payload: {
+      clientIndex: number;
+      email: string | null;
+      aid: number | null;
+      uuid: string | null;
+    }
+  ) {}
+}
+
+export class ActionEditUserRetrieveSuccess implements Action {
+  readonly type = EditUserActionTypes.RETRIEVE_SUCCESS;
+
+  constructor(readonly payload: { result: Result<any> }) {}
+}
+
+export type EditUserActions = ActionEditUserRetrieve | ActionEditUserRetrieveSuccess;
 
 // DeleteUser
 export enum DeleteUserActionTypes {
